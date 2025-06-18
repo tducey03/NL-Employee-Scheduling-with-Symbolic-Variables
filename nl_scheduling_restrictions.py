@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# imports
 from dwave.optimization import Model
 from dwave.system import LeapHybridNLSampler
 
@@ -19,7 +20,7 @@ import numpy as np
 
 # Set the solver we're going to use
 def set_sampler():
-    '''Returns a dimod sampler'''
+    '''Returns an optimization sampler'''
 
     sampler = LeapHybridNLSampler()
 
@@ -42,7 +43,7 @@ def employee_preferences():
 
 # Create NL object
 def build_nl():
-    '''Builds the CQM for our problem'''
+    '''Builds the NL for our problem'''
     model = Model()
 
     preferences = employee_preferences()
@@ -50,7 +51,7 @@ def build_nl():
     num_shifts = 4
     names = list(preferences.keys())
     num_employee = len(names)
-    variables = model.binary([num_employee, num_shifts]) #should be num employee positions with num shifts in each index
+    variables = model.binary([num_employee, num_shifts])
 
     model.minimize((shift_pref * variables).sum())
     for i in range(num_employee):
@@ -75,17 +76,14 @@ def build_nl():
 
 # Solve the problem
 def solve_problem(model, sampler):
-    '''Runs the provided cqm object on the designated sampler'''
+    '''Runs the provided model object on the designated sampler'''
 
-    # Initialize the CQM solver
+    # Initialize the NL solver
     #sampler = set_sampler()
 
-    # Solve the problem using the CQM solver
+    # Solve the problem using the NL solver
     sampleset = sampler.sample(model, label='Training - Employee Scheduling')
-
-    # Filter for feasible samples
-    #feasible_sampleset = sampleset.filter(lambda x:x.is_feasible)
-
+    
     return sampleset.result()
 
 # Process solution
