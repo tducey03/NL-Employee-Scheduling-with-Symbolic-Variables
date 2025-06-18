@@ -1,0 +1,44 @@
+Differences between CQM and NL solutions to Employee-Scheduling
+
+1. Change the imports. 
+	from dwave.optimization import Model
+	from dwave.system import LeapHybridNLSampler
+
+2. set_sampler() update
+	change LeapHybridCQMSampler() to LeapHybridNLSampler()
+
+3. build_[model_type]
+	build_cqm() function name to build_nl()
+	Initialize the NL object 'model = Model()'
+	To use contents of preferences, you need to put the parts into a constant. model.constant can hold a list type shown as np.array(list(preferences.values()))
+	Can get the number of employees by using len(list(preferences.keys()))
+	Make a binary matrix the size of num_employee (rows) by num_shifts (columns)
+	OBJECTIVE: minimize summation of all employee preferences if assigned that shift
+	For every employee, make sure they work only once
+
+	DIFFERENCES: 
+		No for loop for each entry in preferences. NL does it automatically
+		No extra label for each employee over every shift
+		Easier objective
+		Easier 'work-only-once'
+
+4. solve_problem/()
+	Add parameter to definition - solve_problem(model, sampler)
+	Sampleset - sample command is different. Change model you are sampling in first argument
+
+5. process_sampleset()
+	Decision_vars is an iterator that tells the NL solver to iterate through all variables in the node collection
+	Make a list with 4 sublists to store the employee names assigned to the shift
+	Get the names of employees from employee_preferences keys, and put the names in a list
+	Organize the decision structure in indexed_vars (MUST BE DECLARED OUTSIDE OF LOCK)
+	Iterate over employees and then shifts
+	Get the state of the employee-shift to compare if assigned
+	Append names to the shift assigned
+
+	DIFFERENCES:
+		can get names assigned to shift easier in CQM
+
+6. Main
+	Change 'cqm = build_cqm' to 'model = build_nl()'
+	Change model passed into solve_problem()
+	Add used model argument to process_sampleset() call
