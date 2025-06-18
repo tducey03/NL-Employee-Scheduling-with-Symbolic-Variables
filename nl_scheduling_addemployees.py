@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#from dimod import ConstrainedQuadraticModel, Binary, quicksum
-#from dwave.system import LeapHybridCQMSampler
+#imports
 from dwave.optimization import Model
 from dwave.system import LeapHybridNLSampler
 
@@ -21,9 +20,8 @@ import numpy as np
 
 # Set the solver we're going to use
 def set_sampler():
-    '''Returns a dimod sampler'''
-
-    #sampler = LeapHybridCQMSampler()
+    '''Returns a optimization sampler'''
+    
     sampler = LeapHybridNLSampler()
 
     return sampler
@@ -65,13 +63,12 @@ def build_nl():
 
 # Solve the problem
 def solve_problem(model, sampler):
-    '''Runs the provided cqm object on the designated sampler'''
+    '''Runs the provided model object on the designated sampler'''
 
-    # Initialize the CQM solver
+    # Initialize the NL solver
     #sampler = set_sampler()
 
-    # Solve the problem using the CQM solver
-    #sampleset = sampler.sample_cqm(cqm, label='Training - Employee Scheduling')
+    # Solve the problem using the NL solver
     sampleset = sampler.sample(model, label='Training - Employee Scheduling - NL')
 
     return sampleset.result()
@@ -80,8 +77,6 @@ def solve_problem(model, sampler):
 def process_sampleset(model, sampleset):
     '''Processes the best solution found for displaying'''
    
- # Get the first feasible solutionfeasible = model.feasible(state_index)
-    #feasible = sampleset.filter(lambda d:d.is_feasible)
     decision_vars = list(model.iter_decisions())[0]
 
     shift_schedule = [[] for _ in range(4)]
@@ -107,15 +102,12 @@ if __name__ == "__main__":
     shifts = [1, 2, 3, 4]
     num_shifts = len(shifts)
 
-    #cqm = build_cqm()
     model = build_nl()
 
     sampler = set_sampler()
 
-    #sampleset = solve_problem(cqm, sampler)
     sampleset = solve_problem(model, sampler)
 
-    # prevent model from making more possible solutions
     shift_schedule = process_sampleset(model, sampleset)
 
     for i in range(num_shifts):
