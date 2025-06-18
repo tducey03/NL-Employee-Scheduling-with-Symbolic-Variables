@@ -58,7 +58,7 @@ def build_nl():
         model.add_constraint(variables[i].sum() == model.constant(1.0))
 
     # TODO: Restrict Anna from working shift 4
-    #model.add_constraint()
+    model.add_constraint(variables[names.index("Anna")][3] == model.constant(0.0)) # index 0 to 3
 
     # TODO: Set constraints to reflect the restrictions in the README.
     # Bill and Frank CANNOT woek together
