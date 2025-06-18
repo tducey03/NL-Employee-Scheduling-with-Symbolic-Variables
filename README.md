@@ -2,7 +2,7 @@
   https://img.shields.io/badge/Open%20in%20GitHub%20Codespaces-333?logo=github)](
   https://codespaces.new/dwave-training/employee-scheduling?quickstart=1)
   
-# The Employee Scheduling Problem With Symbolic Variables
+# The Employee Scheduling Problem With Symbolic Variables - Nonlinear (SOLUTION)
 
 Exercise for D-Wave in-person training course to demonstrate the NL solver.
 
